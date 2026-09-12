@@ -1,0 +1,1068 @@
+{
+  "info": {
+    "name": "SEFAZ · Catálogo de Webservices (NF-e · NFC-e · CT-e · MDF-e)",
+    "description": "Catalogo completo dos webservices da SEFAZ: NF-e (55), NFC-e (65), CT-e (57) e MDF-e (58). Uma pasta por modelo, cada request com envelope SOAP 1.2 pronto e variaveis {{}}.\n\n## Como usar\n1. Escolha a request. Copie a URL (homolog ou prod) da descricao para a variavel {{url}}.\n2. Certificado e-CNPJ A1: Settings > Certificates > Add Certificate, por host, com o .pfx e senha. Desligue a verificacao SSL do servidor (ACs da ICP-Brasil nao estao no trust store do Postman).\n3. Ajuste as variaveis (cnpj, cUF, tpAmb, chave44...) e dispare.\n\n## Convencoes\n- [cadeado] no nome = o XML de dados exige assinatura XMLDSig (autorizacao, eventos, inutilizacao). O Postman nao assina XML; para esses use a POC em codigo ou um assinador. Consultas e distribuicao nao assinam.\n- [OK testado] = validado contra a SEFAZ em 12/09/2026 (cStat 137).\n- Todos SOAP 1.2: o action vai no Content-Type, nao em header SOAPAction separado.\n\n## Autorizadores\nURLs default do SVRS. NFeDistribuicaoDFe e CTeDistribuicaoDFe sao do Ambiente Nacional (RFB). NFC-e em AM/GO/MS/MT/PR/RS/SP usa ambiente proprio (URLs a confirmar). Contingencia NF-e: SVC-AN/SVC-RS; NFC-e: offline (tpEmis=9).\n\nRef: Manuais NF-e/NFC-e 4.00, CT-e 4.00, MDF-e 3.00b, NT 2015.002.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "url",
+      "value": "",
+      "description": "URL do servico (homolog ou prod), copiada da descricao da request."
+    },
+    {
+      "key": "tpAmb",
+      "value": "2",
+      "description": "1=producao, 2=homologacao"
+    },
+    {
+      "key": "cUF",
+      "value": "42",
+      "description": "codigo IBGE da UF (42=SC, 35=SP, 43=RS)"
+    },
+    {
+      "key": "UF",
+      "value": "SC",
+      "description": "sigla da UF (consulta cadastro)"
+    },
+    {
+      "key": "cnpj",
+      "value": "",
+      "description": "CNPJ do autor/emitente, sem pontuacao"
+    },
+    {
+      "key": "chave44",
+      "value": "",
+      "description": "chave de acesso de 44 digitos"
+    },
+    {
+      "key": "ultNSU",
+      "value": "000000000000000",
+      "description": "distribuicao: ultimo NSU (0 = primeira carga)"
+    },
+    {
+      "key": "nRec",
+      "value": "",
+      "description": "recibo do lote (retorno assincrono)"
+    },
+    {
+      "key": "idLote",
+      "value": "1",
+      "description": "identificador do lote"
+    },
+    {
+      "key": "indSinc",
+      "value": "1",
+      "description": "1=sincrono, 0=assincrono"
+    },
+    {
+      "key": "tpEvento",
+      "value": "110111",
+      "description": "codigo do evento (ver pasta Eventos)"
+    },
+    {
+      "key": "nSeq",
+      "value": "1",
+      "description": "sequencia do evento"
+    },
+    {
+      "key": "ano",
+      "value": "26",
+      "description": "ano (2 digitos) para inutilizacao"
+    },
+    {
+      "key": "serie",
+      "value": "1",
+      "description": "serie do documento"
+    },
+    {
+      "key": "nNFini",
+      "value": "1",
+      "description": "numero inicial (inutilizacao)"
+    },
+    {
+      "key": "nNFfin",
+      "value": "1",
+      "description": "numero final (inutilizacao)"
+    },
+    {
+      "key": "xJust",
+      "value": "",
+      "description": "justificativa (min 15 caracteres)"
+    },
+    {
+      "key": "dhEvento",
+      "value": "",
+      "description": "data/hora do evento (ISO com fuso)"
+    }
+  ],
+  "item": [
+    {
+      "name": "NF-e (modelo 55)",
+      "description": "Webservices da NF-e 4.00. Autorizador SVRS; NFeDistribuicaoDFe e do Ambiente Nacional (RFB). SOAP 1.2. Servicos com [cadeado] exigem assinatura XMLDSig.",
+      "item": [
+        {
+          "name": "NFeStatusServico4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeStatusServico4/nfeStatusServicoNF\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "NfeStatusServico",
+                "NfeStatusServico4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><nfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeStatusServico4\"><cUF>{{cUF}}</cUF><versaoDados>4.00</versaoDados></nfeCabecMsg></soap12:Header>\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeStatusServico4\"><consStatServ xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><tpAmb>{{tpAmb}}</tpAmb><cUF>{{cUF}}</cUF><xServ>STATUS</xServ></consStatServ></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nDisponibilidade do autorizador. cStat 107 = em operacao.\n\nHomolog: https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx\nProd: https://nfe.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeAutorizacao4 [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeAutorizacao4/nfeAutorizacaoLote\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfe-homologacao.svrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "NfeAutorizacao",
+                "NFeAutorizacao4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><nfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeAutorizacao4\"><cUF>{{cUF}}</cUF><versaoDados>4.00</versaoDados></nfeCabecMsg></soap12:Header>\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeAutorizacao4\"><enviNFe xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><idLote>{{idLote}}</idLote><indSinc>{{indSinc}}</indSinc><!-- NFe assinada (ref infNFe) --></enviNFe></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nAutorizacao. indSinc=1 sincrono (recomendado), 0 assincrono. cStat 100 = autorizada.\n\nHomolog: https://nfe-homologacao.svrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx\nProd: https://nfe.svrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeRetAutorizacao4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRetAutorizacao4/nfeRetAutorizacaoLote\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfe-homologacao.svrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "NfeRetAutorizacao",
+                "NFeRetAutorizacao4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><nfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRetAutorizacao4\"><cUF>{{cUF}}</cUF><versaoDados>4.00</versaoDados></nfeCabecMsg></soap12:Header>\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRetAutorizacao4\"><consReciNFe xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><tpAmb>{{tpAmb}}</tpAmb><nRec>{{nRec}}</nRec></consReciNFe></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nConsulta recibo do lote (assincrono). cStat 104 = lote processado.\n\nHomolog: https://nfe-homologacao.svrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx\nProd: https://nfe.svrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeConsultaProtocolo4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeConsultaProtocolo4/nfeConsultaNF\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfe-homologacao.svrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "NfeConsulta",
+                "NfeConsulta4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><nfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeConsultaProtocolo4\"><cUF>{{cUF}}</cUF><versaoDados>4.00</versaoDados></nfeCabecMsg></soap12:Header>\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeConsultaProtocolo4\"><consSitNFe xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><tpAmb>{{tpAmb}}</tpAmb><xServ>CONSULTAR</xServ><chNFe>{{chave44}}</chNFe></consSitNFe></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nSituacao da NFe por chave (44 dig). Retorna protNFe e eventos.\n\nHomolog: https://nfe-homologacao.svrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx\nProd: https://nfe.svrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeInutilizacao4 [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeInutilizacao4/nfeInutilizacaoNF\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfe-homologacao.svrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "nfeinutilizacao",
+                "nfeinutilizacao4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><nfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeInutilizacao4\"><cUF>{{cUF}}</cUF><versaoDados>4.00</versaoDados></nfeCabecMsg></soap12:Header>\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeInutilizacao4\"><inutNFe xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><infInut Id=\"ID{{cUF}}{{ano}}{{cnpj}}55{{serie}}{{nNFini}}{{nNFfin}}\"><tpAmb>{{tpAmb}}</tpAmb><xServ>INUTILIZAR</xServ><cUF>{{cUF}}</cUF><ano>{{ano}}</ano><CNPJ>{{cnpj}}</CNPJ><mod>55</mod><serie>{{serie}}</serie><nNFIni>{{nNFini}}</nNFIni><nNFFin>{{nNFfin}}</nNFFin><xJust>{{xJust}}</xJust></infInut><!-- Signature ref infInut --></inutNFe></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nInutiliza faixa nao usada. Assina infInut. xJust >= 15. cStat 102 = homologada.\n\nHomolog: https://nfe-homologacao.svrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx\nProd: https://nfe.svrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeConsultaCadastro4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/CadConsultaCadastro4/consultaCadastro4\""
+              }
+            ],
+            "url": {
+              "raw": "https://cad-homologacao.svrs.rs.gov.br/ws/cadconsultacadastro/cadconsultacadastro4.asmx",
+              "protocol": "https",
+              "host": [
+                "cad-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "cadconsultacadastro",
+                "cadconsultacadastro4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><nfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/CadConsultaCadastro4\"><cUF>{{cUF}}</cUF><versaoDados>2.00</versaoDados></nfeCabecMsg></soap12:Header>\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/CadConsultaCadastro4\"><ConsCad xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"2.00\"><infCons><xServ>CONS-CAD</xServ><UF>{{UF}}</UF><CNPJ>{{cnpj}}</CNPJ></infCons></ConsCad></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nCadastro ICMS. versaoDados 2.00. Informar exatamente um: IE, CNPJ ou CPF.\n\nHomolog: https://cad-homologacao.svrs.rs.gov.br/ws/cadconsultacadastro/cadconsultacadastro4.asmx\nProd: https://cad.svrs.rs.gov.br/ws/cadconsultacadastro/cadconsultacadastro4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeRecepcaoEvento4 [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRecepcaoEvento4/nfeRecepcaoEvento\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfe-homologacao.svrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "recepcaoevento",
+                "recepcaoevento4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><nfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRecepcaoEvento4\"><cUF>{{cUF}}</cUF><versaoDados>1.00</versaoDados></nfeCabecMsg></soap12:Header>\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRecepcaoEvento4\"><envEvento xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"1.00\"><idLote>{{idLote}}</idLote><evento versao=\"1.00\"><infEvento Id=\"ID{{tpEvento}}{{chave44}}{{nSeq}}\"><cOrgao>{{cUF}}</cOrgao><tpAmb>{{tpAmb}}</tpAmb><CNPJ>{{cnpj}}</CNPJ><chNFe>{{chave44}}</chNFe><dhEvento>{{dhEvento}}</dhEvento><tpEvento>{{tpEvento}}</tpEvento><nSeqEvento>{{nSeq}}</nSeqEvento><verEvento>1.00</verEvento><detEvento versao=\"1.00\"><!-- conteudo --></detEvento></infEvento><!-- Signature --></evento></envEvento></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nEventos: Cancelamento 110111, CCe 110110, Manifestacao 210200/210210/210220/210240 (recebida pelo AN). Assina cada evento.\n\nHomolog: https://nfe-homologacao.svrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx\nProd: https://nfe.svrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeDistribuicaoDFe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeDistribuicaoDFe/nfeDistDFeInteresse\""
+              }
+            ],
+            "url": {
+              "raw": "https://hom1.nfe.fazenda.gov.br/NFeDistribuicaoDFe/NFeDistribuicaoDFe.asmx",
+              "protocol": "https",
+              "host": [
+                "hom1",
+                "nfe",
+                "fazenda",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "NFeDistribuicaoDFe",
+                "NFeDistribuicaoDFe.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<nfeDistDFeInteresse xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeDistribuicaoDFe\"><nfeDadosMsg><distDFeInt xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"1.01\"><tpAmb>{{tpAmb}}</tpAmb><cUFAutor>{{cUF}}</cUFAutor><CNPJ>{{cnpj}}</CNPJ><distNSU><ultNSU>{{ultNSU}}</ultNSU></distNSU></distDFeInt></nfeDadosMsg></nfeDistDFeInteresse>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nAmbiente Nacional (RFB). distDFeInt COM cUFAutor, wrapper nfeDistDFeInteresse>nfeDadosMsg, SEM cabecMsg, versao 1.01. Modos: distNSU/ultNSU, consNSU/NSU, consChNFe/chNFe. Lote 50, espera 1h (656). cStat 137 vazio, 138 com docs.\n\nHomolog: https://hom1.nfe.fazenda.gov.br/NFeDistribuicaoDFe/NFeDistribuicaoDFe.asmx\nProd: https://www1.nfe.fazenda.gov.br/NFeDistribuicaoDFe/NFeDistribuicaoDFe.asmx"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "NFC-e (modelo 65)",
+      "description": "NFC-e 4.00 pelo SVRS. Difere da NF-e: CSC/idCSC + QR Code (infNFeSupl), mod=65, sincrona (indSinc=1). Sem SVC; contingencia offline (tpEmis=9). SVRS atende AC/AL/AP/BA/CE/DF/ES/MA/PA/PB/PE/PI/RJ/RN/RO/RR/SC/SE/TO; AM/GO/MS/MT/PR/RS/SP proprio (URLs a confirmar).",
+      "item": [
+        {
+          "name": "NFeAutorizacao4 (NFC-e) [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeAutorizacao4/nfeAutorizacaoLote\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfce-homologacao.svrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfce-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "NfeAutorizacao",
+                "NFeAutorizacao4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeAutorizacao4\"><enviNFe xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><idLote>{{idLote}}</idLote><indSinc>1</indSinc><!-- NFC-e assinada com infNFeSupl (qrCode+urlChave via CSC) --></enviNFe></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nAutorizacao NFC-e. Exige infNFeSupl (qrCode/urlChave gerados com CSC/idCSC da UF). mod=65. Sincrono.\n\nHomolog: https://nfce-homologacao.svrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx\nProd: https://nfce.svrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeRetAutorizacao4 (NFC-e)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRetAutorizacao4/nfeRetAutorizacaoLote\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfce-homologacao.svrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfce-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "NfeRetAutorizacao",
+                "NFeRetAutorizacao4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRetAutorizacao4\"><consReciNFe xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><tpAmb>{{tpAmb}}</tpAmb><nRec>{{nRec}}</nRec></consReciNFe></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nSo no modo assincrono. No sincrono (padrao NFC-e) o protocolo ja volta na autorizacao.\n\nHomolog: https://nfce-homologacao.svrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx\nProd: https://nfce.svrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeStatusServico4 (NFC-e)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeStatusServico4/nfeStatusServicoNF\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfce-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfce-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "NfeStatusServico",
+                "NfeStatusServico4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeStatusServico4\"><consStatServ xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><tpAmb>{{tpAmb}}</tpAmb><cUF>{{cUF}}</cUF><xServ>STATUS</xServ></consStatServ></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nDisponibilidade do autorizador NFC-e.\n\nHomolog: https://nfce-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx\nProd: https://nfce.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeConsultaProtocolo4 (NFC-e)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeConsultaProtocolo4/nfeConsultaNF\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfce-homologacao.svrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfce-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "NfeConsulta",
+                "NfeConsulta4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeConsultaProtocolo4\"><consSitNFe xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><tpAmb>{{tpAmb}}</tpAmb><xServ>CONSULTAR</xServ><chNFe>{{chave44}}</chNFe></consSitNFe></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nSituacao da NFC-e por chave (mod 65).\n\nHomolog: https://nfce-homologacao.svrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx\nProd: https://nfce.svrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeRecepcaoEvento4 (NFC-e Cancelamento) [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRecepcaoEvento4/nfeRecepcaoEvento\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfce-homologacao.svrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfce-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "recepcaoevento",
+                "recepcaoevento4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRecepcaoEvento4\"><envEvento xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"1.00\"><idLote>{{idLote}}</idLote><!-- evento Cancelamento 110111 assinado --></envEvento></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nEvento tipico da NFC-e e o Cancelamento (110111). CCe e Manifestacao NAO se aplicam.\n\nHomolog: https://nfce-homologacao.svrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx\nProd: https://nfce.svrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "NFeInutilizacao4 (NFC-e) [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeInutilizacao4/nfeInutilizacaoNF\""
+              }
+            ],
+            "url": {
+              "raw": "https://nfce-homologacao.svrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx",
+              "protocol": "https",
+              "host": [
+                "nfce-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "nfeinutilizacao",
+                "nfeinutilizacao4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeInutilizacao4\"><inutNFe xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><infInut Id=\"ID{{cUF}}{{ano}}{{cnpj}}65{{serie}}{{nNFini}}{{nNFfin}}\"><tpAmb>{{tpAmb}}</tpAmb><xServ>INUTILIZAR</xServ><cUF>{{cUF}}</cUF><ano>{{ano}}</ano><CNPJ>{{cnpj}}</CNPJ><mod>65</mod><serie>{{serie}}</serie><nNFIni>{{nNFini}}</nNFIni><nNFFin>{{nNFfin}}</nNFFin><xJust>{{xJust}}</xJust></infInut></inutNFe></nfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nmod=65. Inutiliza faixa nao usada. Assina infInut.\n\nHomolog: https://nfce-homologacao.svrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx\nProd: https://nfce.svrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CT-e (modelo 57)",
+      "description": "CT-e 4.00 pelo SVRS; CTeDistribuicaoDFe do Ambiente Nacional. Autorizacao SINCRONA na 4.00 (lote assincrono descontinuado). SOAP 1.2 sem cabecMsg. Distribuicao TESTADA em 12/09/2026 (cStat 137).",
+      "item": [
+        {
+          "name": "CTeStatusServicoV4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeStatusServicoV4/cteStatusServicoCT\""
+              }
+            ],
+            "url": {
+              "raw": "https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx",
+              "protocol": "https",
+              "host": [
+                "cte-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "CTeStatusServicoV4",
+                "CTeStatusServicoV4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<cteDadosMsg xmlns=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeStatusServicoV4\"><consStatServCte xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"4.00\"><tpAmb>{{tpAmb}}</tpAmb><xServ>STATUS</xServ></consStatServCte></cteDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nDisponibilidade. cStat 107 = em operacao.\n\nHomolog: https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx\nProd: https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "CTeRecepcaoSincV4 [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeRecepcaoSincV4/cteRecepcao\""
+              }
+            ],
+            "url": {
+              "raw": "https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoSincV4/CTeRecepcaoSincV4.asmx",
+              "protocol": "https",
+              "host": [
+                "cte-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "CTeRecepcaoSincV4",
+                "CTeRecepcaoSincV4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<cteDadosMsg xmlns=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeRecepcaoSincV4\"><CTe xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"4.00\"><!-- infCte assinada --></CTe></cteDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nAutorizacao sincrona do CT-e 57. Assina infCte. Um doc por chamada. cStat 100 = autorizado.\n\nHomolog: https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoSincV4/CTeRecepcaoSincV4.asmx\nProd: https://cte.svrs.rs.gov.br/ws/CTeRecepcaoSincV4/CTeRecepcaoSincV4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "CTeRecepcaoOSV4 [cadeado] (CT-e OS, mod 67)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeRecepcaoOSV4/cteRecepcaoOS\""
+              }
+            ],
+            "url": {
+              "raw": "https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoOSV4/CTeRecepcaoOSV4.asmx",
+              "protocol": "https",
+              "host": [
+                "cte-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "CTeRecepcaoOSV4",
+                "CTeRecepcaoOSV4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<cteDadosMsg xmlns=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeRecepcaoOSV4\"><CTeOS xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"4.00\"><!-- infCte assinada --></CTeOS></cteDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nCT-e Outras Prestacoes (modelo 67, raiz CTeOS).\n\nHomolog: https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoOSV4/CTeRecepcaoOSV4.asmx\nProd: https://cte.svrs.rs.gov.br/ws/CTeRecepcaoOSV4/CTeRecepcaoOSV4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "CTeRecepcaoGTVeV4 [cadeado] (GTV-e, mod 64)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeRecepcaoGTVeV4/cteRecepcao\""
+              }
+            ],
+            "url": {
+              "raw": "https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoGTVeV4/CTeRecepcaoGTVeV4.asmx",
+              "protocol": "https",
+              "host": [
+                "cte-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "CTeRecepcaoGTVeV4",
+                "CTeRecepcaoGTVeV4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<cteDadosMsg xmlns=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeRecepcaoGTVeV4\"><GTVe xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"4.00\"><!-- infCte assinada --></GTVe></cteDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nGuia de Transporte de Valores (modelo 64, raiz GTVe). Metodo SOAP e cteRecepcao; distingue pelo endpoint.\n\nHomolog: https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoGTVeV4/CTeRecepcaoGTVeV4.asmx\nProd: https://cte.svrs.rs.gov.br/ws/CTeRecepcaoGTVeV4/CTeRecepcaoGTVeV4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "CTeConsultaV4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeConsultaV4/cteConsultaCT\""
+              }
+            ],
+            "url": {
+              "raw": "https://cte-homologacao.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx",
+              "protocol": "https",
+              "host": [
+                "cte-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "CTeConsultaV4",
+                "CTeConsultaV4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<cteDadosMsg xmlns=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeConsultaV4\"><consSitCTe xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"4.00\"><tpAmb>{{tpAmb}}</tpAmb><xServ>CONSULTAR</xServ><chCTe>{{chave44}}</chCTe></consSitCTe></cteDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nSituacao do CT-e por chave (44 dig). Retorna protCTe e eventos.\n\nHomolog: https://cte-homologacao.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx\nProd: https://cte.svrs.rs.gov.br/ws/CTeConsultaV4/CTeConsultaV4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "CTeRecepcaoEventoV4 [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeRecepcaoEventoV4/cteRecepcaoEvento\""
+              }
+            ],
+            "url": {
+              "raw": "https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx",
+              "protocol": "https",
+              "host": [
+                "cte-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "CTeRecepcaoEventoV4",
+                "CTeRecepcaoEventoV4.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<cteDadosMsg xmlns=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeRecepcaoEventoV4\"><eventoCTe xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"4.00\"><infEvento Id=\"ID{{tpEvento}}{{chave44}}{{nSeq}}\"><cOrgao>{{cUF}}</cOrgao><tpAmb>{{tpAmb}}</tpAmb><CNPJ>{{cnpj}}</CNPJ><chCTe>{{chave44}}</chCTe><dhEvento>{{dhEvento}}</dhEvento><tpEvento>{{tpEvento}}</tpEvento><nSeqEvento>{{nSeq}}</nSeqEvento><detEvento versaoEvento=\"4.00\"><!-- conteudo --></detEvento></infEvento><!-- Signature --></eventoCTe></cteDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nEventos: CCe 110110, Cancelamento 110111, EPEC 110113, Prestacao em Desacordo 610110. Assina infEvento.\n\nHomolog: https://cte-homologacao.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx\nProd: https://cte.svrs.rs.gov.br/ws/CTeRecepcaoEventoV4/CTeRecepcaoEventoV4.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "CTeDistribuicaoDFe [OK testado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeDistribuicaoDFe/cteDistDFeInteresse\""
+              }
+            ],
+            "url": {
+              "raw": "https://hom1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx",
+              "protocol": "https",
+              "host": [
+                "hom1",
+                "cte",
+                "fazenda",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "CTeDistribuicaoDFe",
+                "CTeDistribuicaoDFe.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<cteDistDFeInteresse xmlns=\"http://www.portalfiscal.inf.br/cte/wsdl/CTeDistribuicaoDFe\"><cteDadosMsg><distDFeInt xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"1.00\"><tpAmb>{{tpAmb}}</tpAmb><cUFAutor>{{cUF}}</cUFAutor><CNPJ>{{cnpj}}</CNPJ><distNSU><ultNSU>{{ultNSU}}</ultNSU></distNSU></distDFeInt></cteDadosMsg></cteDistDFeInteresse>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nTESTADO 12/09/2026 (cStat 137). Ambiente Nacional. distDFeInt COM cUFAutor, wrapper cteDistDFeInteresse>cteDadosMsg, SEM cabecMsg, versao 1.00. Modos: distNSU/ultNSU, consNSU/NSU, consChNSU/chCTe. Lote 50, espera 1h (656).\n\nHomolog: https://hom1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx\nProd: https://www1.cte.fazenda.gov.br/CTeDistribuicaoDFe/CTeDistribuicaoDFe.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "(nota) CTeInutilizacao",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": ""
+            },
+            "description": "O CT-e 4.00 NAO oferece inutilizacao de numeracao no rol nacional (diferente da NF-e)."
+          },
+          "response": []
+        },
+        {
+          "name": "(nota) CTeRecepcao/CTeRetRecepcao (lote assincrono)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": ""
+            },
+            "description": "DESCONTINUADO na 4.00. Autorizacao e exclusivamente sincrona (SincV4/OSV4/GTVeV4). Existe tambem CTeRecepcaoSimpV4 (CT-e Simplificado)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MDF-e (modelo 58)",
+      "description": "MDF-e 3.00 pelo SVRS (atende quase todas as UFs, inclusive SP); distribuicao tambem no SVRS. Autorizacao SINCRONA (dados em GZip+base64). SOAP 1.2. cabecMsg opcional na 3.00, exceto na distribuicao (cUF no header, confirmado por teste). Distribuicao TESTADA 12/09/2026 (cStat 137).",
+      "item": [
+        {
+          "name": "MDFeStatusServico",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeStatusServico/mdfeStatusServicoMDF\""
+              }
+            ],
+            "url": {
+              "raw": "https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx",
+              "protocol": "https",
+              "host": [
+                "mdfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "MDFeStatusServico",
+                "MDFeStatusServico.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><mdfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeStatusServico\"><cUF>{{cUF}}</cUF><versaoDados>3.00</versaoDados></mdfeCabecMsg></soap12:Header>\n<soap12:Body>\n<mdfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeStatusServico\"><consStatServMDFe xmlns=\"http://www.portalfiscal.inf.br/mdfe\" versao=\"3.00\"><tpAmb>{{tpAmb}}</tpAmb><xServ>STATUS</xServ></consStatServMDFe></mdfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nDisponibilidade. cStat 107 = em operacao.\n\nHomolog: https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx\nProd: https://mdfe.svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "MDFeRecepcaoSinc [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcaoSinc/mdfeRecepcao\""
+              }
+            ],
+            "url": {
+              "raw": "https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeRecepcaoSinc/MDFeRecepcaoSinc.asmx",
+              "protocol": "https",
+              "host": [
+                "mdfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "MDFeRecepcaoSinc",
+                "MDFeRecepcaoSinc.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><mdfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcaoSinc\"><cUF>{{cUF}}</cUF><versaoDados>3.00</versaoDados></mdfeCabecMsg></soap12:Header>\n<soap12:Body>\n<mdfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcaoSinc\">{{MDFe_gzip_base64}}</mdfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nAutorizacao sincrona 3.00. Area de dados COMPACTADA (GZip -> base64). Assina infMDFe. cStat 100 = autorizado.\n\nHomolog: https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeRecepcaoSinc/MDFeRecepcaoSinc.asmx\nProd: https://mdfe.svrs.rs.gov.br/ws/MDFeRecepcaoSinc/MDFeRecepcaoSinc.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "MDFeConsulta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeConsulta/mdfeConsultaMDF\""
+              }
+            ],
+            "url": {
+              "raw": "https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx",
+              "protocol": "https",
+              "host": [
+                "mdfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "MDFeConsulta",
+                "MDFeConsulta.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><mdfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeConsulta\"><cUF>{{cUF}}</cUF><versaoDados>3.00</versaoDados></mdfeCabecMsg></soap12:Header>\n<soap12:Body>\n<mdfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeConsulta\"><consSitMDFe xmlns=\"http://www.portalfiscal.inf.br/mdfe\" versao=\"3.00\"><tpAmb>{{tpAmb}}</tpAmb><xServ>CONSULTAR</xServ><chMDFe>{{chave44}}</chMDFe></consSitMDFe></mdfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nSituacao do MDF-e por chave (44 dig).\n\nHomolog: https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx\nProd: https://mdfe.svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "MDFeConsNaoEnc",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeConsNaoEnc/mdfeConsNaoEnc\""
+              }
+            ],
+            "url": {
+              "raw": "https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeConsNaoEnc/MDFeConsNaoEnc.asmx",
+              "protocol": "https",
+              "host": [
+                "mdfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "MDFeConsNaoEnc",
+                "MDFeConsNaoEnc.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><mdfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeConsNaoEnc\"><cUF>{{cUF}}</cUF><versaoDados>3.00</versaoDados></mdfeCabecMsg></soap12:Header>\n<soap12:Body>\n<mdfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeConsNaoEnc\"><consMDFeNaoEnc xmlns=\"http://www.portalfiscal.inf.br/mdfe\" versao=\"3.00\"><tpAmb>{{tpAmb}}</tpAmb><xServ>CONSULTAR NAO ENCERRADOS</xServ><CNPJ>{{cnpj}}</CNPJ></consMDFeNaoEnc></mdfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nMDF-e nao encerrados do emitente. xServ literal 'CONSULTAR NAO ENCERRADOS'.\n\nHomolog: https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeConsNaoEnc/MDFeConsNaoEnc.asmx\nProd: https://mdfe.svrs.rs.gov.br/ws/MDFeConsNaoEnc/MDFeConsNaoEnc.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "MDFeRecepcaoEvento [cadeado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcaoEvento/mdfeRecepcaoEvento\""
+              }
+            ],
+            "url": {
+              "raw": "https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeRecepcaoEvento/MDFeRecepcaoEvento.asmx",
+              "protocol": "https",
+              "host": [
+                "mdfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "MDFeRecepcaoEvento",
+                "MDFeRecepcaoEvento.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><mdfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcaoEvento\"><cUF>{{cUF}}</cUF><versaoDados>3.00</versaoDados></mdfeCabecMsg></soap12:Header>\n<soap12:Body>\n<mdfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcaoEvento\"><eventoMDFe xmlns=\"http://www.portalfiscal.inf.br/mdfe\" versao=\"3.00\"><infEvento Id=\"ID{{tpEvento}}{{chave44}}{{nSeq}}\"><cOrgao>{{cUF}}</cOrgao><tpAmb>{{tpAmb}}</tpAmb><CNPJ>{{cnpj}}</CNPJ><chMDFe>{{chave44}}</chMDFe><dhEvento>{{dhEvento}}</dhEvento><tpEvento>{{tpEvento}}</tpEvento><nSeqEvento>{{nSeq}}</nSeqEvento><detEvento versaoEvento=\"3.00\"><!-- conteudo --></detEvento></infEvento><!-- Signature --></eventoMDFe></mdfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[🔏 assina XML]\n\nEventos: Cancelamento 110111, Encerramento 110112, Inclusao de Condutor 110114, Inclusao de DF-e 110115, Pagamento 110116. Assina infEvento.\n\nHomolog: https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeRecepcaoEvento/MDFeRecepcaoEvento.asmx\nProd: https://mdfe.svrs.rs.gov.br/ws/MDFeRecepcaoEvento/MDFeRecepcaoEvento.asmx"
+          },
+          "response": []
+        },
+        {
+          "name": "MDFeDistribuicaoDFe [OK testado]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeDistribuicaoDFe/mdfeDistDFeInteresse\""
+              }
+            ],
+            "url": {
+              "raw": "https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeDistribuicaoDFe/MDFeDistribuicaoDFe.asmx",
+              "protocol": "https",
+              "host": [
+                "mdfe-homologacao",
+                "svrs",
+                "rs",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "ws",
+                "MDFeDistribuicaoDFe",
+                "MDFeDistribuicaoDFe.asmx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Header><mdfeCabecMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeDistribuicaoDFe\"><cUF>{{cUF}}</cUF><versaoDados>1.00</versaoDados></mdfeCabecMsg></soap12:Header>\n<soap12:Body>\n<mdfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeDistribuicaoDFe\"><distDFeInt xmlns=\"http://www.portalfiscal.inf.br/mdfe\" versao=\"1.00\"><tpAmb>{{tpAmb}}</tpAmb><CNPJ>{{cnpj}}</CNPJ><distNSU><ultNSU>{{ultNSU}}</ultNSU></distNSU></distDFeInt></mdfeDadosMsg>\n</soap12:Body>\n</soap12:Envelope>"
+            },
+            "description": "[aberto]\n\nTESTADO 12/09/2026 (cStat 137). distDFeInt SEM cUFAutor (cUF vai no mdfeCabecMsg do header), mdfeDadosMsg DIRETO no Body (sem wrapper). Suporta APENAS distNSU e consNSU (NAO tem consChNSU).\n\nHomolog: https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeDistribuicaoDFe/MDFeDistribuicaoDFe.asmx\nProd: https://mdfe.svrs.rs.gov.br/ws/MDFeDistribuicaoDFe/MDFeDistribuicaoDFe.asmx"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Eventos (referência de tpEvento)",
+      "description": "Eventos enviados via RecepcaoEvento do respectivo modelo (com tpEvento). Referência de códigos:\n\n- 110110 · Carta de Correcao (CC-e) (NF-e, CT-e): Nao se aplica a NFC-e.\n- 110111 · Cancelamento (NF-e, NFC-e, CT-e, MDF-e): Exige nProt e xJust >= 15.\n- 110112 · Cancel. por Substituicao (NF-e) / Encerramento (MDF-e) (NF-e, MDF-e): Mesmo codigo, significado por modelo.\n- 110113 · EPEC (CT-e) (CT-e): \n- 110114 · Inclusao de Condutor (MDF-e): \n- 110115 · Inclusao de DF-e (MDF-e): \n- 110116 · Pagamento Operacao Transporte (MDF-e): \n- 110140 · EPEC (NF-e) (NF-e): Ao SVC-AN. NFC-e usa offline (tpEmis=9).\n- 210200/210210/210220/210240 · Manifestacao do Destinatario (NF-e): Recebido pelo AN. Nao existe para NFC-e.\n- 610110/610111 · Prestacao de Servico em Desacordo (CT-e): Registrado pelo tomador.\n",
+      "item": []
+    }
+  ]
+}

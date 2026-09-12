@@ -1,0 +1,11 @@
+# nunca versionar certificados nem segredos
+certs/
+*.pfx
+*.p12
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+.DS_Store
+__pycache__/
